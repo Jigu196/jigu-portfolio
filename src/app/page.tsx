@@ -282,7 +282,7 @@ function Section({
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col gap-3">
           {eyebrow ? (
-            <span className="text-xs uppercase tracking-[0.3em] text-sky-300">{eyebrow}</span>
+            <span className="text-xs uppercase tracking-[0.3em] text-amber-100">{eyebrow}</span>
           ) : null}
           <motion.h2
             initial={{ opacity: 0, y: 12 }}
@@ -312,39 +312,39 @@ function TerminalPanel({
   const active = commands.find((item) => item.id === activeCommandId) ?? commands[0];
 
   return (
-    <div className="relative rounded-3xl border border-sky-500/30 bg-black/90 shadow-[0_0_40px_rgba(56,189,248,0.15)]">
-      <div className="flex items-center justify-between border-b border-sky-500/20 bg-neutral-900/90 px-4 py-3">
+    <div className="relative rounded-3xl border border-amber-100/30 bg-black/90 shadow-[0_0_40px_rgba(254,240,138,0.15)]">
+      <div className="flex items-center justify-between border-b border-amber-100/30 bg-neutral-900/90 px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-red-500/80" />
-          <span className="h-3 w-3 rounded-full bg-amber-500/80" />
-          <span className="h-3 w-3 rounded-full bg-sky-500/80" />
+          <span className="h-3 w-3 rounded-full bg-amber-100/80" />
+          <span className="h-3 w-3 rounded-full bg-amber-100/80" />
         </div>
         <div className="flex items-center gap-2 text-xs text-neutral-400">
-          <TerminalSquare className="h-4 w-4 text-sky-400" />
+          <TerminalSquare className="h-4 w-4 text-amber-100" />
           <span>cmd.exe</span>
         </div>
       </div>
-      <div className="flex items-center justify-between border-b border-sky-500/20 bg-sky-500/10 px-4 py-2 font-mono text-xs text-sky-300">
+      <div className="flex items-center justify-between border-b border-amber-100/30 bg-amber-100/10 px-4 py-2 font-mono text-xs text-amber-100">
         <span>{INFO.name.toLowerCase().replace(/\s+/g, '')}@portfolio</span>
         <span>~/java</span>
       </div>
       <div className="space-y-3 px-5 py-6 font-mono text-sm">
-        <div className="text-sky-400">&gt; {active.command}</div>
+        <div className="text-amber-100">&gt; {active.command}</div>
         {active.output.map((line) => (
           <div key={line} className="text-neutral-200">
             {line}
           </div>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2 border-t border-sky-500/20 bg-sky-500/10 px-4 py-3">
+      <div className="flex flex-wrap gap-2 border-t border-amber-100/30 bg-amber-100/10 px-4 py-3">
         {commands.map((item) => (
           <button
             key={item.id}
             onClick={() => onCommandChange(item.id)}
             className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition ${
               item.id === activeCommandId
-                ? 'border-sky-500 bg-sky-500 text-black shadow-[0_0_20px_rgba(56,189,248,0.4)]'
-                : 'border-sky-500/30 text-sky-200 hover:bg-sky-500/15'
+                ? 'border-amber-100 bg-amber-100 text-black shadow-[0_0_20px_rgba(254,240,138,0.25)]'
+                : 'border-amber-100/30 text-amber-100 hover:bg-amber-100/12'
             }`}
           >
             <Command className="h-3.5 w-3.5" />
@@ -388,10 +388,10 @@ function ApiPanel({
   };
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-sky-500/30 bg-neutral-950/90 shadow-[0_0_40px_rgba(56,189,248,0.12)]">
+    <div className="overflow-hidden rounded-3xl border border-amber-100/30 bg-neutral-950/90 shadow-[0_0_40px_rgba(254,240,138,0.12)]">
       <div className="flex flex-col lg:flex-row">
-        <aside className="border-b border-sky-500/20 bg-black/60 p-5 lg:w-64 lg:border-b-0 lg:border-r">
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-300">Requests</div>
+        <aside className="border-b border-amber-100/30 bg-black/60 p-5 lg:w-64 lg:border-b-0 lg:border-r">
+          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-100">Requests</div>
           <div className="mt-4 space-y-2">
             {requests.map((request) => (
               <button
@@ -399,12 +399,12 @@ function ApiPanel({
                 onClick={() => onSelectRequest(request.id)}
                 className={`w-full rounded-xl border px-3 py-2 text-left text-xs transition ${
                   request.id === active.id
-                    ? 'border-sky-500 bg-sky-500/10 text-sky-200'
-                    : 'border-white/10 text-neutral-300 hover:border-sky-500/40 hover:text-sky-200'
+                    ? 'border-amber-100 bg-amber-100/10 text-amber-100'
+                    : 'border-white/10 text-neutral-300 hover:border-amber-100/40 hover:text-amber-100'
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center rounded-md border border-sky-500/40 bg-sky-500/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-sky-200">
+                  <span className="inline-flex items-center rounded-md border border-amber-100/40 bg-amber-100/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-amber-100">
                     {request.method}
                   </span>
                   <span className="truncate font-mono text-[10px] text-neutral-400">
@@ -418,7 +418,7 @@ function ApiPanel({
         <div className="flex-1 space-y-5 p-5 lg:p-8">
           <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center rounded-md border border-sky-500/40 bg-sky-500/10 px-2 py-1 font-mono text-xs uppercase text-sky-200">
+              <span className="inline-flex items-center rounded-md border border-amber-100/40 bg-amber-100/10 px-2 py-1 font-mono text-xs uppercase text-amber-100">
                 {active.method}
               </span>
               <div className="truncate font-mono text-xs text-neutral-300">{active.url}</div>
@@ -426,7 +426,7 @@ function ApiPanel({
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={handleCopy}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-neutral-300 transition hover:border-sky-500/40 hover:text-sky-200"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-neutral-300 transition hover:border-amber-100/40 hover:text-amber-100"
                 type="button"
               >
                 <Copy className="h-3.5 w-3.5" />
@@ -434,7 +434,7 @@ function ApiPanel({
               </button>
               <button
                 onClick={() => onSendRequest(active.id)}
-                className="inline-flex items-center gap-2 rounded-xl border border-sky-500/40 bg-sky-500 px-3 py-2 text-xs font-semibold text-black transition hover:bg-sky-400"
+                className="inline-flex items-center gap-2 rounded-xl border border-amber-100/40 bg-amber-100 px-3 py-2 text-xs font-semibold text-black transition hover:bg-amber-50"
                 type="button"
               >
                 <Send className="h-3.5 w-3.5" />
@@ -448,7 +448,7 @@ function ApiPanel({
           <div className="rounded-2xl border border-white/10 bg-white/5">
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-neutral-400">
               <span>Response</span>
-              <span className={`font-mono ${showResponse ? 'text-sky-300' : 'text-neutral-500'}`}>
+              <span className={`font-mono ${showResponse ? 'text-amber-100' : 'text-neutral-500'}`}>
                 {showResponse ? active.response.status : 'Awaiting send'}
               </span>
             </div>
@@ -493,8 +493,8 @@ export default function Portfolio() {
       {!isReady && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950">
           <div className="flex flex-col items-center gap-3">
-            <div className="h-12 w-12 animate-spin rounded-full border-2 border-sky-400 border-t-transparent" />
-            <span className="font-mono text-xs uppercase tracking-[0.3em] text-sky-300">Booting services…</span>
+            <div className="h-12 w-12 animate-spin rounded-full border-2 border-amber-100 border-t-transparent" />
+            <span className="font-mono text-xs uppercase tracking-[0.3em] text-amber-100">Booting services…</span>
           </div>
         </div>
       )}
@@ -502,7 +502,7 @@ export default function Portfolio() {
       <header className="sticky top-0 z-40 border-b border-white/10 bg-neutral-950/80 backdrop-blur">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <a href="#home" className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-            <Server className="h-5 w-5 text-sky-400" />
+            <Server className="h-5 w-5 text-amber-100" />
             {INFO.name}
           </a>
           <div className="hidden items-center gap-6 text-sm text-neutral-300 md:flex">
@@ -521,7 +521,7 @@ export default function Portfolio() {
           </div>
           <a
             href={INFO.resume}
-            className="inline-flex items-center gap-2 rounded-xl border border-sky-500/40 bg-sky-500/10 px-3 py-2 text-sm font-medium text-sky-200 transition hover:bg-sky-500/20"
+            className="inline-flex items-center gap-2 rounded-xl border border-amber-100/40 bg-amber-100/10 px-3 py-2 text-sm font-medium text-amber-100 transition hover:bg-amber-100/12"
           >
             <Download className="h-4 w-4" />
             Resume
@@ -531,10 +531,10 @@ export default function Portfolio() {
 
       <main>
         <section id="home" className="relative overflow-hidden">
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.2),transparent_58%)]" />
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(254,240,138,0.2),transparent_58%)]" />
           <div className="mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-20 md:pb-20 md:pt-24 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center">
             <div className="space-y-6">
-              <Pill className="border-sky-500/30 bg-sky-500/10 uppercase tracking-[0.3em] text-sky-300">
+              <Pill className="border-amber-100/30 bg-amber-100/10 uppercase tracking-[0.3em] text-amber-100">
                 Java backend engineer
               </Pill>
               <motion.h1
@@ -556,7 +556,7 @@ export default function Portfolio() {
               <div className="flex flex-wrap gap-3">
                 <a
                   href={`mailto:${INFO.email}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-semibold text-black transition hover:bg-sky-400"
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-100 px-4 py-2 text-sm font-semibold text-black transition hover:bg-amber-50"
                 >
                   <Mail className="h-4 w-4" />
                   Email me
@@ -565,14 +565,14 @@ export default function Portfolio() {
                   href={INFO.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-sky-500/40 bg-white/5 px-4 py-2 text-sm font-semibold text-sky-200 transition hover:bg-white/10"
+                  className="inline-flex items-center gap-2 rounded-xl border border-amber-100/40 bg-white/5 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:bg-white/10"
                 >
                   <Linkedin className="h-4 w-4" />
                   LinkedIn
                 </a>
                 <a
                   href={`tel:${INFO.phone}`}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-sky-500/40 hover:text-sky-200"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-amber-100/40 hover:text-amber-100"
                 >
                   <Phone className="h-4 w-4" />
                   {INFO.phone}
@@ -580,7 +580,7 @@ export default function Portfolio() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {HERO_TAGS.map((tag) => (
-                  <Pill key={tag} className="border-sky-500/20 bg-sky-500/10 text-sky-200">
+                  <Pill key={tag} className="border-amber-100/30 bg-amber-100/10 text-amber-100">
                     {tag}
                   </Pill>
                 ))}
@@ -592,13 +592,13 @@ export default function Portfolio() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="relative"
             >
-              <Sparkles className="absolute -left-8 -top-6 h-6 w-6 text-sky-400/70 md:-left-10 md:-top-8" />
+              <Sparkles className="absolute -left-8 -top-6 h-6 w-6 text-amber-100/70 md:-left-10 md:-top-8" />
               <TerminalPanel
                 commands={TERMINAL_COMMANDS}
                 activeCommandId={activeCommandId}
                 onCommandChange={setActiveCommandId}
               />
-              <Sparkles className="absolute -bottom-8 -right-6 h-6 w-6 rotate-12 text-sky-400/60 md:-bottom-10 md:-right-8" />
+              <Sparkles className="absolute -bottom-8 -right-6 h-6 w-6 rotate-12 text-amber-100/60 md:-bottom-10 md:-right-8" />
             </motion.div>
           </div>
         </section>
@@ -634,7 +634,7 @@ export default function Portfolio() {
                       transition={{ duration: 0.4 }}
                       className="rounded-2xl border border-white/10 bg-white/5 p-5"
                     >
-                      <Icon className="h-6 w-6 text-sky-400" />
+                      <Icon className="h-6 w-6 text-amber-100" />
                       <div className="mt-4 text-base font-semibold text-white">{item.title}</div>
                       <p className="mt-2 text-sm text-neutral-300">{item.description}</p>
                     </motion.div>
@@ -644,13 +644,13 @@ export default function Portfolio() {
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
               <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                <GitBranch className="h-5 w-5 text-sky-400" />
+                <GitBranch className="h-5 w-5 text-amber-100" />
                 Milestones & recognition
               </div>
               <ul className="mt-4 space-y-3 text-sm text-neutral-300">
                 {ACHIEVEMENTS.map((item) => (
                   <li key={item} className="flex gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-sky-400" />
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-amber-100" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -672,7 +672,7 @@ export default function Portfolio() {
               >
                 <div className="flex items-center justify-between text-xs text-neutral-400">
                   <span>{project.period}</span>
-                  <Pill className="border-sky-500/20 bg-sky-500/10 text-sky-200">
+                  <Pill className="border-amber-100/30 bg-amber-100/10 text-amber-100">
                     Java
                   </Pill>
                 </div>
@@ -681,7 +681,7 @@ export default function Portfolio() {
                 <ul className="mt-4 space-y-2 text-sm text-neutral-200">
                   {project.impacts.map((impact) => (
                     <li key={impact} className="flex gap-2">
-                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-sky-400" />
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-amber-100" />
                       <span>{impact}</span>
                     </li>
                   ))}
@@ -690,7 +690,7 @@ export default function Portfolio() {
                   {project.stack.map((tech) => (
                     <Pill
                       key={tech}
-                      className="border-sky-500/20 bg-sky-500/10 text-sky-200"
+                      className="border-amber-100/30 bg-amber-100/10 text-amber-100"
                     >
                       {tech}
                     </Pill>
@@ -707,7 +707,7 @@ export default function Portfolio() {
               {SKILL_GROUPS.map((group) => (
                 <div key={group.category} className="rounded-2xl border border-white/10 bg-neutral-950/80 p-5">
                   <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                    <Database className="h-4 w-4 text-sky-400" />
+                    <Database className="h-4 w-4 text-amber-100" />
                     {group.category}
                   </div>
                   <ul className="mt-3 space-y-2 text-sm text-neutral-300">
@@ -732,7 +732,7 @@ export default function Portfolio() {
               <div className="mt-6 space-y-3">
                 <a
                   href={`mailto:${INFO.email}`}
-                  className="inline-flex w-full items-center justify-between rounded-xl border border-sky-500/30 bg-sky-500/10 px-4 py-3 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/20"
+                  className="inline-flex w-full items-center justify-between rounded-xl border border-amber-100/30 bg-amber-100/10 px-4 py-3 text-sm font-semibold text-amber-100 transition hover:bg-amber-100/12"
                 >
                   <span className="flex items-center gap-2">
                     <Mail className="h-4 w-4" />
@@ -742,7 +742,7 @@ export default function Portfolio() {
                 </a>
                 <a
                   href={`tel:${INFO.phone}`}
-                  className="inline-flex w-full items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm text-neutral-200 transition hover:border-sky-500/30 hover:text-sky-200"
+                  className="inline-flex w-full items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm text-neutral-200 transition hover:border-amber-100/30 hover:text-amber-100"
                 >
                   <Phone className="h-4 w-4" />
                   {INFO.phone}
@@ -751,7 +751,7 @@ export default function Portfolio() {
                   href={INFO.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex w-full items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm text-neutral-200 transition hover:border-sky-500/30 hover:text-sky-200"
+                  className="inline-flex w-full items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm text-neutral-200 transition hover:border-amber-100/30 hover:text-amber-100"
                 >
                   <Linkedin className="h-4 w-4" />
                   linkedin.com/in/jigisa-rathod
@@ -760,7 +760,7 @@ export default function Portfolio() {
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
               <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                <Database className="h-4 w-4 text-sky-400" />
+                <Database className="h-4 w-4 text-amber-100" />
                 Recent focus
               </div>
               <ul className="mt-4 space-y-3 text-sm text-neutral-300">
