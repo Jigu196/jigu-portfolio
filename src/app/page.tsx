@@ -64,7 +64,7 @@ const INFO = {
   name: 'Jigisa Rathod',
   role: 'Java Backend Engineer',
   experience: '2.5+ years',
-  location: 'Ahmedabad, India',
+  location: 'Surat, India',
   email: 'rathodjigisa3010@gmail.com',
   phone: '+91-6354812399',
   linkedin: 'https://www.linkedin.com/in/jigisa-rathod',
@@ -159,7 +159,7 @@ const API_REQUESTS: ApiRequest[] = [
         '  "status": "in-progress",',
         '  "nextDeliverable": "Streaming PDF exports backed by Micronaut",',
         '  "lastDeployed": "2025-08-25",',
-        '  "owner": "Jigisa Rathod"',
+        // '  "owner": "Jigisa Rathod"',
         '}',
       ],
     },
@@ -774,7 +774,7 @@ export default function Portfolio() {
       </main>
 
       <footer className="py-10 text-center text-xs text-neutral-500">
-        &copy; {new Date().getFullYear()} {INFO.name}. Crafted with Next.js, Tailwind, and plenty of coffee.
+        &copy; {new Date().getFullYear()} {INFO.name}. Crafted by JIGU.
       </footer>
     </div>
   );
