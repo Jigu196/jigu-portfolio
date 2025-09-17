@@ -1,290 +1,788 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Linkedin, Download, Link2, Server, Database, Shield, Rocket, TerminalSquare, GitBranch, Zap, Eye } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  Linkedin,
+  Download,
+  Server,
+  TerminalSquare,
+  Cpu,
+  Database,
+  GitBranch,
+  Rocket,
+  Shield,
+  Sparkles,
+  Command,
+  Copy,
+  Send,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-/**
- * Jigisa Rathod — Backend Portfolio (distinct design)
- * Stack: React + TailwindCSS + Framer Motion + Lucide icons
- *
- * How to use (Next.js):
- * 1) Create a Next.js app with Tailwind.
- * 2) Save this file as app/page.tsx (or src/app/page.tsx) and export default.
- * 3) Put your resume PDF at public/jigisa_resume.pdf (or change the link below).
- */
+type TerminalCommand = {
+  id: string;
+  label: string;
+  command: string;
+  output: string[];
+};
+
+type HighlightCard = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+};
+
+type Project = {
+  title: string;
+  period: string;
+  summary: string;
+  impacts: string[];
+  stack: string[];
+};
+
+type SkillGroup = {
+  category: string;
+  items: string[];
+};
+
+type ApiRequest = {
+  id: string;
+  method: 'GET' | 'POST';
+  url: string;
+  description: string;
+  curl: string;
+  response: {
+    status: string;
+    body: string[];
+  };
+};
 
 const INFO = {
   name: 'Jigisa Rathod',
-  title: 'Associate Software Engineer — Backend',
+  role: 'Java Backend Engineer',
+  experience: '2.5+ years',
+  location: 'Ahmedabad, India',
   email: 'rathodjigisa3010@gmail.com',
   phone: '+91-6354812399',
   linkedin: 'https://www.linkedin.com/in/jigisa-rathod',
   resume: '/jigisa_resume.pdf',
   summary:
-    'Backend-focused engineer (2.5+ yrs) specializing in Java 8/17, Spring Boot & Micronaut. I migrate legacy systems, build high-performance REST APIs, and design real-time services with WebSocket/Firebase.',
+    'Java backend engineer focused on building reactive services, migrating legacy systems, and shipping real-time user experiences with Spring Boot and Micronaut.',
 };
 
-const SKILLS = [
-  { group: 'Languages', items: ['Java 8/17', 'C', 'C++', 'HTML'] },
-  { group: 'Frameworks', items: ['Spring Boot', 'Micronaut (Reactive)', 'Hibernate', 'Thymeleaf'] },
-  { group: 'Data', items: ['Cassandra', 'MySQL', 'SQL'] },
-  { group: 'Auth & Security', items: ['MSAL (Azure AD)', 'JWT', 'RBAC'] },
-  { group: 'Realtime', items: ['WebSocket', 'Socket.IO', 'Firebase'] },
-  { group: 'Perf & QA', items: ['JMeter', 'Locust'] },
-  { group: 'Reporting', items: ['JasperReports'] },
-  { group: 'Tooling', items: ['Git', 'Maven'] },
+const HERO_TAGS = [
+  'Java 17 first',
+  'Spring Boot & Micronaut',
+  'Realtime APIs',
+  'Performance tuning',
 ];
 
-const PROJECTS = [
+const TERMINAL_COMMANDS: TerminalCommand[] = [
   {
-    title: 'CSS Module — Java Upgrade & Realtime Notifications',
-    period: 'May 2023 – Dec 2023',
-    points: [
-      'Migrated stack from Java 8 → 17; ~30% perf improvement.',
-      'Spring Boot → Micronaut (reactive) for faster startup & scalability.',
-      'WebSocket + Firebase for reliable realtime notifications.',
+    id: 'whoami',
+    label: 'whoami',
+    command: 'whoami',
+    output: [
+      'Jigisa Rathod',
+      `Java Backend Engineer | ${INFO.location}`,
+      'Building resilient microservices and realtime user experiences.',
     ],
-    stack: ['Java 17', 'Micronaut', 'Firebase', 'WebSocket', 'Hibernate', 'SQL'],
   },
   {
-    title: 'TRP — R&D & Database Exploration',
-    period: 'Jan 2024 – Jun 2024',
-    points: [
-      'Migrated Spring Boot apps to Micronaut (reactive).',
-      'Cassandra integration; load testing with Locust/JMeter.',
+    id: 'stack',
+    label: 'stack --core',
+    command: 'stack --core',
+    output: [
+      'Java 8 & 17 | Spring Boot | Micronaut',
+      'Realtime: WebSocket, Firebase, SSE',
+      'Data: MySQL, Cassandra, SQL',
     ],
-    stack: ['Micronaut', 'Cassandra', 'Locust', 'JMeter', 'REST'],
   },
   {
-    title: 'AMS — APIs & Dynamic Reporting',
-    period: 'Jul 2024 – Present',
-    points: [
-      'Integrated existing services into AMS platform; built multiple APIs.',
-      'Dynamic reports (auto-size) + export to PDF/CSV/Excel (JasperReports).',
-      'Spring Boot → Micronaut migrations for reactive microservices.',
+    id: 'status',
+    label: 'status --current',
+    command: 'status --current',
+    output: [
+      'Engineering AMS platform APIs with reactive pipelines.',
+      'Owning Micronaut migrations and performance tuning.',
     ],
-    stack: ['Micronaut', 'Spring Boot', 'JasperReports', 'SQL', 'REST APIs'],
+  },
+  {
+    id: 'contact',
+    label: 'contact --open',
+    command: 'contact --open',
+    output: [
+      `email: ${INFO.email}`,
+      `phone: ${INFO.phone}`,
+      'linkedin: linkedin.com/in/jigisa-rathod',
+    ],
+  },
+];
+
+const API_REQUESTS: ApiRequest[] = [
+  {
+    id: 'profile',
+    method: 'GET',
+    url: 'https://api.jigisarathod.dev/v1/profile',
+    description: 'Core profile for recruiters: skills, experience, links.',
+    curl: "curl -X GET https://api.jigisarathod.dev/v1/profile -H 'Accept: application/json'",
+    response: {
+      status: '200 OK',
+      body: [
+        '{',
+        '  "name": "Jigisa Rathod",',
+        '  "role": "Java Backend Engineer",',
+        '  "experience": "2.5+ years",',
+        '  "stack": ["Java 17", "Spring Boot", "Micronaut"],',
+        '  "contact": {',
+        '    "email": "rathodjigisa3010@gmail.com",',
+        '    "linkedin": "https://www.linkedin.com/in/jigisa-rathod"',
+        '  }',
+        '}',
+      ],
+    },
+  },
+  {
+    id: 'focus',
+    method: 'POST',
+    url: 'https://api.jigisarathod.dev/v1/focus',
+    description: 'What I am solving right now on AMS platform.',
+    curl: "curl -X POST https://api.jigisarathod.dev/v1/focus -H 'Content-Type: application/json' -d '{\"module\":\"ams-reporting\"}'",
+    response: {
+      status: '202 Accepted',
+      body: [
+        '{',
+        '  "module": "ams-reporting",',
+        '  "status": "in-progress",',
+        '  "nextDeliverable": "Streaming PDF exports backed by Micronaut",',
+        '  "lastDeployed": "2025-08-25",',
+        '  "owner": "Jigisa Rathod"',
+        '}',
+      ],
+    },
+  },
+];
+const HIGHLIGHTS: HighlightCard[] = [
+  {
+    icon: Cpu,
+    title: 'Modern Java delivery',
+    description:
+      'Upgrades monoliths to Java 17 microservices with clean interfaces, circuit breakers, and observability baked in.',
+  },
+  {
+    icon: Shield,
+    title: 'Secure by design',
+    description:
+      'Implements Azure AD, JWT, and RBAC layers that keep enterprise data safe without slowing delivery.',
+  },
+  {
+    icon: Rocket,
+    title: 'Performance obsessed',
+    description:
+      'Proves impact with load testing, profiling, and focused refactors that cut latency and boost throughput.',
+  },
+];
+
+const PROJECTS: Project[] = [
+  {
+    title: 'CSS Module - Java Upgrade & Realtime Alerts',
+    period: 'May 2023 - Dec 2023',
+    summary:
+      'Led the modernization of a core compliance module while keeping 24/7 uptime for global teams.',
+    impacts: [
+      'Upgraded from Java 8 to 17 with modular builds and zero downtime cutovers.',
+      'Introduced Micronaut alongside Spring Boot for reactive workloads and faster cold starts.',
+      'Delivered WebSocket and Firebase channels to broadcast alerts in under 2 seconds.',
+    ],
+    stack: ['Java 17', 'Micronaut', 'Spring Boot', 'Firebase', 'WebSocket', 'Hibernate', 'SQL'],
+  },
+  {
+    title: 'TRP - Data R&D Initiative',
+    period: 'Jan 2024 - Jun 2024',
+    summary:
+      'Explored new data pipelines and storage strategies for a trading research platform.',
+    impacts: [
+      'Migrated Spring Boot services to Micronaut, enabling reactive streaming APIs.',
+      'Evaluated Cassandra against SQL workloads and validated with JMeter and Locust.',
+    ],
+    stack: ['Micronaut', 'Spring Boot', 'Cassandra', 'Locust', 'JMeter', 'REST APIs'],
+  },
+  {
+    title: 'AMS Platform - Reactive APIs & Reporting',
+    period: 'Jul 2024 - Present',
+    summary:
+      'Owning backend build-out for a modular asset management system with dynamic reporting.',
+    impacts: [
+      'Integrated legacy services, hardened authentication, and built cross-team REST APIs.',
+      'Automated PDF, CSV, and Excel exports with JasperReports and streaming pipelines.',
+      'Guiding teams through Micronaut adoption for event-driven microservices.',
+    ],
+    stack: ['Java 17', 'Micronaut', 'Spring Boot', 'JasperReports', 'SQL', 'REST'],
+  },
+];
+
+const SKILL_GROUPS: SkillGroup[] = [
+  {
+    category: 'Languages',
+    items: ['Java 8/17', 'C', 'C++', 'HTML'],
+  },
+  {
+    category: 'Frameworks',
+    items: ['Spring Boot', 'Micronaut', 'Hibernate', 'Thymeleaf'],
+  },
+  {
+    category: 'Data & Messaging',
+    items: ['Cassandra', 'MySQL', 'SQL', 'WebSocket', 'Socket.IO', 'Firebase'],
+  },
+  {
+    category: 'Security',
+    items: ['Azure AD (MSAL)', 'JWT', 'RBAC', 'OAuth 2.0'],
+  },
+  {
+    category: 'Quality & Tooling',
+    items: ['JMeter', 'Locust', 'Git', 'Maven'],
+  },
+  {
+    category: 'Reporting',
+    items: ['JasperReports', 'Custom PDF pipelines'],
   },
 ];
 
 const ACHIEVEMENTS = [
-  'Winner in Inter College IT Events (COC, E-Hunt, Googler, Web Crawler)',
-  'Google Analytics 360 & GTM Fundamentals (2020) — multiple GA certificates',
+  'Winner in inter-college IT events including Code of Conduct, E-Hunt, Googler, and Web Crawler.',
+  'Google Analytics 360 and Google Tag Manager Fundamentals (2020).',
 ];
 
-function Pill({ children }: { children: React.ReactNode }) {
+function Pill({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-neutral-200">
+    <span
+      className={`inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-neutral-200 ${className}`}
+    >
       {children}
     </span>
   );
 }
 
-function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+function Section({
+  id,
+  title,
+  eyebrow,
+  children,
+}: {
+  id: string;
+  title: string;
+  eyebrow?: string;
+  children: ReactNode;
+}) {
   return (
-    <section id={id} className="scroll-mt-24 py-14 md:py-20">
-      <div className="max-w-6xl mx-auto px-6">
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-2xl md:text-3xl font-semibold tracking-tight"
-        >
-          {title}
-        </motion.h2>
-        <div className="mt-6">{children}</div>
+    <section id={id} className="scroll-mt-24 py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="flex flex-col gap-3">
+          {eyebrow ? (
+            <span className="text-xs uppercase tracking-[0.3em] text-sky-300">{eyebrow}</span>
+          ) : null}
+          <motion.h2
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+            className="text-2xl font-semibold tracking-tight text-white md:text-3xl"
+          >
+            {title}
+          </motion.h2>
+        </div>
+        <div className="mt-10">{children}</div>
       </div>
     </section>
   );
 }
 
-export default function Portfolio() {
-  const [tab, setTab] = useState<'projects' | 'skills'>('projects');
+function TerminalPanel({
+  commands,
+  activeCommandId,
+  onCommandChange,
+}: {
+  commands: TerminalCommand[];
+  activeCommandId: string;
+  onCommandChange: (id: string) => void;
+}) {
+  const active = commands.find((item) => item.id === activeCommandId) ?? commands[0];
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-neutral-950/80 backdrop-blur">
-        <nav className="max-w-6xl mx-auto h-16 px-6 flex items-center justify-between">
-          <a href="#home" className="font-semibold tracking-tight inline-flex items-center gap-2">
-            <Server className="h-5 w-5" /> {INFO.name}
-          </a>
-          <div className="hidden md:flex items-center gap-6 text-sm text-neutral-300">
-            <a href="#about" className="hover:text-white">About</a>
-            <a href="#work" className="hover:text-white">Work</a>
-            <a href="#projects" className="hover:text-white">Projects</a>
-            <a href="#skills" className="hover:text-white">Skills</a>
-            <a href="#contact" className="hover:text-white">Contact</a>
-          </div>
-          <a href={INFO.resume} className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm hover:bg-white/20">
-            <Download className="h-4 w-4" /> Resume
-          </a>
-        </nav>
-      </header>
-
-      {/* Hero — split terminal/card layout (distinct from earlier site) */}
-      <section id="home" className="relative overflow-hidden">
-        {/* subtle grid bg */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.12),transparent_45%),radial-gradient(ellipse_at_bottom,rgba(16,185,129,0.1),transparent_45%)]" />
-        <div className="max-w-6xl mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-6 relative">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
-              <div className="text-sm text-neutral-300">{INFO.title}</div>
-              <h1 className="mt-1 text-3xl md:text-5xl font-bold tracking-tight">Backend Engineer building fast, reliable APIs</h1>
-              <p className="mt-3 text-neutral-300">{INFO.summary}</p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Pill><Zap className="h-3.5 w-3.5" /> Java 8/17</Pill>
-                <Pill><GitBranch className="h-3.5 w-3.5" /> Spring Boot → Micronaut</Pill>
-                <Pill><Database className="h-3.5 w-3.5" /> Cassandra / SQL</Pill>
-                <Pill><Shield className="h-3.5 w-3.5" /> MSAL / JWT</Pill>
-                <Pill><Rocket className="h-3.5 w-3.5" /> JMeter & Locust</Pill>
-              </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href={`mailto:${INFO.email}`} className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:opacity-90"><Mail className="h-4 w-4" /> Email</a>
-                <a href={`tel:${INFO.phone}`} className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm hover:bg-white/20"><Phone className="h-4 w-4" /> Call</a>
-                <a href={INFO.linkedin} target="_blank" className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm hover:bg-white/20"><Linkedin className="h-4 w-4" /> LinkedIn</a>
-              </div>
-            </div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}>
-            <div className="rounded-2xl border border-white/10 bg-neutral-950/60 p-4">
-              <div className="rounded-xl border border-white/10 bg-black/60 p-4 font-mono text-xs text-neutral-200">
-                <div className="flex items-center gap-2 text-neutral-400 mb-3"><TerminalSquare className="h-4 w-4" /> live session</div>
-                <CodeLine>$ curl -s https://api.jigisa.dev/health</CodeLine>
-                <CodeLine className="text-emerald-400">
-                  {`{"status":"ok","uptime":"152d","latency":"12ms"}`}
-                </CodeLine>                <div className="mt-3 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                <CodeLine>$ ./migrate --from java8 --to java17</CodeLine>
-                <CodeLine className="text-blue-300">migrating services… done in 2m41s · -30% latency</CodeLine>
-                <div className="mt-3 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                <CodeLine>$ loadtest --db cassandra --tool jmeter</CodeLine>
-                <CodeLine className="text-amber-300">throughput +22% · p95 110ms → 84ms</CodeLine>
-              </div>
-            </div>
-          </motion.div>
+    <div className="relative rounded-3xl border border-sky-500/30 bg-black/90 shadow-[0_0_40px_rgba(56,189,248,0.15)]">
+      <div className="flex items-center justify-between border-b border-sky-500/20 bg-neutral-900/90 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <span className="h-3 w-3 rounded-full bg-red-500/80" />
+          <span className="h-3 w-3 rounded-full bg-amber-500/80" />
+          <span className="h-3 w-3 rounded-full bg-sky-500/80" />
         </div>
-      </section>
-
-      {/* Work Experience */}
-      <Section id="work" title="Experience">
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 space-y-4">
-            {PROJECTS.map((p) => (
-              <motion.div key={p.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="text-lg font-semibold">{p.title}</h3>
-                    <div className="text-xs text-neutral-400">{p.period}</div>
-                  </div>
-                </div>
-                <ul className="mt-3 list-disc pl-5 text-sm text-neutral-300 space-y-1.5">
-                  {p.points.map((pt) => (<li key={pt}>{pt}</li>))}
-                </ul>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {p.stack.map((s) => (<Pill key={s}>{s}</Pill>))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          <aside className="space-y-3">
-            <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
-              <div className="text-sm font-semibold">Highlights</div>
-              <ul className="mt-2 list-disc pl-5 text-xs text-neutral-300 space-y-1.5">
-                <li>Java 8 → 17 migration across services</li>
-                <li>Micronaut (reactive) for microservices</li>
-                <li>Realtime notifications with WebSocket + Firebase</li>
-                <li>JasperReports for PDF/CSV/Excel exports</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
-              <div className="text-sm font-semibold">Achievements</div>
-              <ul className="mt-2 list-disc pl-5 text-xs text-neutral-300 space-y-1.5">
-                {ACHIEVEMENTS.map((a) => (<li key={a}>{a}</li>))}
-              </ul>
-            </div>
-          </aside>
+        <div className="flex items-center gap-2 text-xs text-neutral-400">
+          <TerminalSquare className="h-4 w-4 text-sky-400" />
+          <span>cmd.exe</span>
         </div>
-      </Section>
-
-      {/* Projects vs Skills Tabs */}
-      <Section id="projects" title="Projects & Skills">
-        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-2">
-          <div className="flex gap-2 p-1">
-            {(['projects', 'skills'] as const).map((t) => (
-              <button key={t} onClick={() => setTab(t)} className={`flex-1 rounded-xl px-3 py-2 text-sm transition ${tab === t ? 'bg-white text-black' : 'text-neutral-300 hover:bg-white/10'}`}>{t.toUpperCase()}</button>
-            ))}
+      </div>
+      <div className="flex items-center justify-between border-b border-sky-500/20 bg-sky-500/10 px-4 py-2 font-mono text-xs text-sky-300">
+        <span>{INFO.name.toLowerCase().replace(/\s+/g, '')}@portfolio</span>
+        <span>~/java</span>
+      </div>
+      <div className="space-y-3 px-5 py-6 font-mono text-sm">
+        <div className="text-sky-400">&gt; {active.command}</div>
+        {active.output.map((line) => (
+          <div key={line} className="text-neutral-200">
+            {line}
           </div>
-          <div className="p-4">
-            {tab === 'projects' ? (
-              <div className="grid md:grid-cols-3 gap-4">
-                {PROJECTS.map((p) => (
-                  <div key={p.title} className="rounded-xl border border-white/10 bg-neutral-950/50 p-4">
-                    <div className="text-sm font-semibold flex items-center gap-2"><Link2 className="h-4 w-4" /> {p.title}</div>
-                    <ul className="mt-2 list-disc pl-5 text-xs text-neutral-300 space-y-1.5">
-                      {p.points.slice(0, 2).map((pt) => (<li key={pt}>{pt}</li>))}
-                    </ul>
-                    <div className="mt-3 flex flex-wrap gap-1.5">{p.stack.map((s) => (<Pill key={s}>{s}</Pill>))}</div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-4 gap-4">
-                {SKILLS.map((g) => (
-                  <div key={g.group} className="rounded-xl border border-white/10 bg-neutral-950/50 p-4">
-                    <div className="text-sm font-semibold">{g.group}</div>
-                    <ul className="mt-2 list-disc pl-5 text-xs text-neutral-300 space-y-1.5">
-                      {g.items.map((it) => (<li key={it}>{it}</li>))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </Section>
-
-      {/* Contact */}
-      <Section id="contact" title="Contact">
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-            <div className="text-sm text-neutral-300">Let’s connect.</div>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a href={`mailto:${INFO.email}`} className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:opacity-90"><Mail className="h-4 w-4" /> {INFO.email}</a>
-              <a href={`tel:${INFO.phone}`} className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm hover:bg-white/20"><Phone className="h-4 w-4" /> {INFO.phone}</a>
-              <a href={INFO.linkedin} target="_blank" className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm hover:bg-white/20"><Linkedin className="h-4 w-4" /> LinkedIn</a>
-            </div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5">
-            <form className="space-y-3">
-              <div>
-                <label className="text-sm text-neutral-300">Name</label>
-                <input className="mt-1 w-full rounded-xl bg-neutral-950 border border-white/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/20" placeholder="Your name" />
-              </div>
-              <div>
-                <label className="text-sm text-neutral-300">Email</label>
-                <input type="email" className="mt-1 w-full rounded-xl bg-neutral-950 border border-white/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/20" placeholder="you@example.com" />
-              </div>
-              <div>
-                <label className="text-sm text-neutral-300">Message</label>
-                <textarea rows={4} className="mt-1 w-full rounded-xl bg-neutral-950 border border-white/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/20" placeholder="Tell me about your project..." />
-              </div>
-              <button type="button" className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:opacity-90">
-                Send
-              </button>
-            </form>
-          </div>
-        </div>
-      </Section>
-
-      <footer className="py-10 text-center text-xs text-neutral-500">© {new Date().getFullYear()} {INFO.name} · Built with React & Tailwind</footer>
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-2 border-t border-sky-500/20 bg-sky-500/10 px-4 py-3">
+        {commands.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => onCommandChange(item.id)}
+            className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition ${
+              item.id === activeCommandId
+                ? 'border-sky-500 bg-sky-500 text-black shadow-[0_0_20px_rgba(56,189,248,0.4)]'
+                : 'border-sky-500/30 text-sky-200 hover:bg-sky-500/15'
+            }`}
+          >
+            <Command className="h-3.5 w-3.5" />
+            {item.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-function CodeLine({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function ApiPanel({
+  requests,
+  activeRequestId,
+  onSelectRequest,
+  onSendRequest,
+  sentRequestId,
+}: {
+  requests: ApiRequest[];
+  activeRequestId: string;
+  onSelectRequest: (id: string) => void;
+  onSendRequest: (id: string) => void;
+  sentRequestId: string | null;
+}) {
+  const active = requests.find((item) => item.id === activeRequestId) ?? requests[0];
+  const [copied, setCopied] = useState(false);
+  const showResponse = sentRequestId === active.id;
+
+  const handleCopy = async () => {
+    if (typeof navigator === 'undefined' || !navigator.clipboard) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(active.curl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
+
   return (
-    <div className={`font-mono whitespace-pre-wrap leading-relaxed ${className}`}>{children}</div>
+    <div className="overflow-hidden rounded-3xl border border-sky-500/30 bg-neutral-950/90 shadow-[0_0_40px_rgba(56,189,248,0.12)]">
+      <div className="flex flex-col lg:flex-row">
+        <aside className="border-b border-sky-500/20 bg-black/60 p-5 lg:w-64 lg:border-b-0 lg:border-r">
+          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-300">Requests</div>
+          <div className="mt-4 space-y-2">
+            {requests.map((request) => (
+              <button
+                key={request.id}
+                onClick={() => onSelectRequest(request.id)}
+                className={`w-full rounded-xl border px-3 py-2 text-left text-xs transition ${
+                  request.id === active.id
+                    ? 'border-sky-500 bg-sky-500/10 text-sky-200'
+                    : 'border-white/10 text-neutral-300 hover:border-sky-500/40 hover:text-sky-200'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center rounded-md border border-sky-500/40 bg-sky-500/10 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-sky-200">
+                    {request.method}
+                  </span>
+                  <span className="truncate font-mono text-[10px] text-neutral-400">
+                    {request.url.replace('https://', '')}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </aside>
+        <div className="flex-1 space-y-5 p-5 lg:p-8">
+          <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center rounded-md border border-sky-500/40 bg-sky-500/10 px-2 py-1 font-mono text-xs uppercase text-sky-200">
+                {active.method}
+              </span>
+              <div className="truncate font-mono text-xs text-neutral-300">{active.url}</div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={handleCopy}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-neutral-300 transition hover:border-sky-500/40 hover:text-sky-200"
+                type="button"
+              >
+                <Copy className="h-3.5 w-3.5" />
+                {copied ? 'Copied!' : 'Copy cURL'}
+              </button>
+              <button
+                onClick={() => onSendRequest(active.id)}
+                className="inline-flex items-center gap-2 rounded-xl border border-sky-500/40 bg-sky-500 px-3 py-2 text-xs font-semibold text-black transition hover:bg-sky-400"
+                type="button"
+              >
+                <Send className="h-3.5 w-3.5" />
+                Send
+              </button>
+            </div>
+          </div>
+          <pre className="overflow-x-auto rounded-2xl border border-black/40 bg-black/80 p-4 font-mono text-xs text-neutral-200">
+            {active.curl}
+          </pre>
+          <div className="rounded-2xl border border-white/10 bg-white/5">
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-neutral-400">
+              <span>Response</span>
+              <span className={`font-mono ${showResponse ? 'text-sky-300' : 'text-neutral-500'}`}>
+                {showResponse ? active.response.status : 'Awaiting send'}
+              </span>
+            </div>
+            <div className="space-y-1 px-4 py-4 font-mono text-xs text-neutral-300">
+              {showResponse ? (
+                active.response.body.map((line) => <div key={line}>{line}</div>)
+              ) : (
+                <span>Press Send to simulate the API response.</span>
+              )}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-neutral-300">
+            {active.description}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+export default function Portfolio() {
+  const [isReady, setIsReady] = useState(false);
+  const [activeCommandId, setActiveCommandId] = useState<string>(TERMINAL_COMMANDS[0].id);
+  const [activeApiId, setActiveApiId] = useState<string>(API_REQUESTS[0].id);
+  const [sentApiId, setSentApiId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsReady(true), 900);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const handleSelectApi = (id: string) => {
+    setActiveApiId(id);
+    setSentApiId((prev) => (prev === id ? prev : null));
+  };
+
+  const handleSendApi = (id: string) => {
+    setSentApiId(id);
+  };
+
+  return (
+    <div className="min-h-screen bg-neutral-950 text-neutral-100">
+      {!isReady && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-12 w-12 animate-spin rounded-full border-2 border-sky-400 border-t-transparent" />
+            <span className="font-mono text-xs uppercase tracking-[0.3em] text-sky-300">Booting services…</span>
+          </div>
+        </div>
+      )}
+
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-neutral-950/80 backdrop-blur">
+        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+          <a href="#home" className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+            <Server className="h-5 w-5 text-sky-400" />
+            {INFO.name}
+          </a>
+          <div className="hidden items-center gap-6 text-sm text-neutral-300 md:flex">
+            <a href="#about" className="transition hover:text-white">
+              About
+            </a>
+            <a href="#projects" className="transition hover:text-white">
+              Projects
+            </a>
+            <a href="#skills" className="transition hover:text-white">
+              Skills
+            </a>
+            <a href="#contact" className="transition hover:text-white">
+              Contact
+            </a>
+          </div>
+          <a
+            href={INFO.resume}
+            className="inline-flex items-center gap-2 rounded-xl border border-sky-500/40 bg-sky-500/10 px-3 py-2 text-sm font-medium text-sky-200 transition hover:bg-sky-500/20"
+          >
+            <Download className="h-4 w-4" />
+            Resume
+          </a>
+        </nav>
+      </header>
+
+      <main>
+        <section id="home" className="relative overflow-hidden">
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.2),transparent_58%)]" />
+          <div className="mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-20 md:pb-20 md:pt-24 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center">
+            <div className="space-y-6">
+              <Pill className="border-sky-500/30 bg-sky-500/10 uppercase tracking-[0.3em] text-sky-300">
+                Java backend engineer
+              </Pill>
+              <motion.h1
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-3xl font-semibold leading-tight text-white md:text-5xl md:leading-tight"
+              >
+                I architect Java-first platforms that stay fast, observable, and production ready.
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                className="max-w-xl text-sm text-neutral-300 md:text-base"
+              >
+                {INFO.summary}
+              </motion.p>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={`mailto:${INFO.email}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-4 py-2 text-sm font-semibold text-black transition hover:bg-sky-400"
+                >
+                  <Mail className="h-4 w-4" />
+                  Email me
+                </a>
+                <a
+                  href={INFO.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-sky-500/40 bg-white/5 px-4 py-2 text-sm font-semibold text-sky-200 transition hover:bg-white/10"
+                >
+                  <Linkedin className="h-4 w-4" />
+                  LinkedIn
+                </a>
+                <a
+                  href={`tel:${INFO.phone}`}
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-sky-500/40 hover:text-sky-200"
+                >
+                  <Phone className="h-4 w-4" />
+                  {INFO.phone}
+                </a>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {HERO_TAGS.map((tag) => (
+                  <Pill key={tag} className="border-sky-500/20 bg-sky-500/10 text-sky-200">
+                    {tag}
+                  </Pill>
+                ))}
+              </div>
+            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="relative"
+            >
+              <Sparkles className="absolute -left-8 -top-6 h-6 w-6 text-sky-400/70 md:-left-10 md:-top-8" />
+              <TerminalPanel
+                commands={TERMINAL_COMMANDS}
+                activeCommandId={activeCommandId}
+                onCommandChange={setActiveCommandId}
+              />
+              <Sparkles className="absolute -bottom-8 -right-6 h-6 w-6 rotate-12 text-sky-400/60 md:-bottom-10 md:-right-8" />
+            </motion.div>
+          </div>
+        </section>
+
+        <Section id="api" title="API prompt for quick checks" eyebrow="api playground">
+          <ApiPanel
+            requests={API_REQUESTS}
+            activeRequestId={activeApiId}
+            onSelectRequest={handleSelectApi}
+            onSendRequest={handleSendApi}
+            sentRequestId={sentApiId}
+          />
+        </Section>
+
+        <Section id="about" title="Backend mindset for enterprise Java" eyebrow="about">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+            <div className="space-y-8">
+              <p className="text-sm text-neutral-300 md:text-base">
+                I work across the full backend lifecycle: deep-diving legacy code, designing new
+                modules, pairing with QA on performance tests, and automating releases. My playbook
+                mixes Micronaut for reactive services, Spring Boot for battle-tested modules, and a
+                focus on observability so production never feels like a black box.
+              </p>
+              <div className="grid gap-4 md:grid-cols-2">
+                {HIGHLIGHTS.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <motion.div
+                      key={item.title}
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4 }}
+                      className="rounded-2xl border border-white/10 bg-white/5 p-5"
+                    >
+                      <Icon className="h-6 w-6 text-sky-400" />
+                      <div className="mt-4 text-base font-semibold text-white">{item.title}</div>
+                      <p className="mt-2 text-sm text-neutral-300">{item.description}</p>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+              <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                <GitBranch className="h-5 w-5 text-sky-400" />
+                Milestones & recognition
+              </div>
+              <ul className="mt-4 space-y-3 text-sm text-neutral-300">
+                {ACHIEVEMENTS.map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-sky-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Section>
+
+        <Section id="projects" title="Projects that shaped my practice" eyebrow="projects">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {PROJECTS.map((project) => (
+              <motion.div
+                key={project.title}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45 }}
+                className="flex h-full flex-col rounded-3xl border border-white/10 bg-neutral-950/70 p-6"
+              >
+                <div className="flex items-center justify-between text-xs text-neutral-400">
+                  <span>{project.period}</span>
+                  <Pill className="border-sky-500/20 bg-sky-500/10 text-sky-200">
+                    Java
+                  </Pill>
+                </div>
+                <div className="mt-4 text-lg font-semibold text-white">{project.title}</div>
+                <p className="mt-3 text-sm text-neutral-300">{project.summary}</p>
+                <ul className="mt-4 space-y-2 text-sm text-neutral-200">
+                  {project.impacts.map((impact) => (
+                    <li key={impact} className="flex gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-sky-400" />
+                      <span>{impact}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {project.stack.map((tech) => (
+                    <Pill
+                      key={tech}
+                      className="border-sky-500/20 bg-sky-500/10 text-sky-200"
+                    >
+                      {tech}
+                    </Pill>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="skills" title="Tools that keep delivery sharp" eyebrow="skills">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {SKILL_GROUPS.map((group) => (
+                <div key={group.category} className="rounded-2xl border border-white/10 bg-neutral-950/80 p-5">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                    <Database className="h-4 w-4 text-sky-400" />
+                    {group.category}
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm text-neutral-300">
+                    {group.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Section>
+
+        <Section id="contact" title="Let us build something dependable" eyebrow="contact">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-3xl border border-white/10 bg-neutral-950/80 p-6 md:p-8">
+              <div className="text-sm font-semibold text-white">Open to Java backend roles</div>
+              <p className="mt-3 text-sm text-neutral-300">
+                Whether you need to modernize a legacy platform or ship a greenfield backend, I can
+                plug in quickly, map dependencies, and deliver secure, testable services.
+              </p>
+              <div className="mt-6 space-y-3">
+                <a
+                  href={`mailto:${INFO.email}`}
+                  className="inline-flex w-full items-center justify-between rounded-xl border border-sky-500/30 bg-sky-500/10 px-4 py-3 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/20"
+                >
+                  <span className="flex items-center gap-2">
+                    <Mail className="h-4 w-4" />
+                    {INFO.email}
+                  </span>
+                  <Sparkles className="h-4 w-4" />
+                </a>
+                <a
+                  href={`tel:${INFO.phone}`}
+                  className="inline-flex w-full items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm text-neutral-200 transition hover:border-sky-500/30 hover:text-sky-200"
+                >
+                  <Phone className="h-4 w-4" />
+                  {INFO.phone}
+                </a>
+                <a
+                  href={INFO.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex w-full items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm text-neutral-200 transition hover:border-sky-500/30 hover:text-sky-200"
+                >
+                  <Linkedin className="h-4 w-4" />
+                  linkedin.com/in/jigisa-rathod
+                </a>
+              </div>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
+              <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                <Database className="h-4 w-4 text-sky-400" />
+                Recent focus
+              </div>
+              <ul className="mt-4 space-y-3 text-sm text-neutral-300">
+                <li>Scaling Micronaut services, tuning GraalVM native images, and metrics-first rollouts.</li>
+                <li>Designing reporting pipelines that stream data to JasperReports with audit trails.</li>
+                <li>Mentoring teams on Java best practices, code reviews, and observability dashboards.</li>
+              </ul>
+            </div>
+          </div>
+        </Section>
+      </main>
+
+      <footer className="py-10 text-center text-xs text-neutral-500">
+        &copy; {new Date().getFullYear()} {INFO.name}. Crafted with Next.js, Tailwind, and plenty of coffee.
+      </footer>
+    </div>
+  );
+}
+
+
+
+
+
+
+
